@@ -55,6 +55,7 @@ The overlay includes:
 
 ## Project Structure
 
+```text
 yolov8-line-crossing-counter
 │
 ├─ video
@@ -71,7 +72,7 @@ yolov8-line-crossing-counter
 ├─ README.md
 │
 └─ .gitignore
-
+```
 
 ## Installation
 
