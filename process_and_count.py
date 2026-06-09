@@ -54,12 +54,17 @@ os.makedirs("output", exist_ok=True)
 fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
-# tracking memory
+# tracking memory for y coordinates with track_id as a key, and previous_cy as values
 previous_positions = {}
 
 # counting
 count = 0
 counted_ids = set()
+
+
+# =========================
+# MAIN LOOP
+# =========================
 
 while True: 
     ret, frame = cap.read()
@@ -75,8 +80,6 @@ while True:
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     
-    
-
     # ---- Top CCTV header ----
     cv2.putText(frame, camera_id, (10,25),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6,
@@ -119,6 +122,7 @@ while True:
     
 
     # get detected classes (extract Person) and bbox coordinates from Yolo
+
     for r in results:
         for box in r.boxes:
 
@@ -140,10 +144,10 @@ while True:
             # draw corner bounding box
             draw_corner_box(frame, x1, y1, x2, y2)
 
-            # centroid
+            # draw centroid
             cv2.circle(frame,(cx,cy),2,(0,255,0),-1)
 
-            # ID label
+            # write ID label
             cv2.putText(frame,
                         f"ID {track_id}",
                         (x1, y1-10),
@@ -151,10 +155,11 @@ while True:
                         0.40,
                         (0,255,0),
                         1)
+            
+            #COUNTING
 
-            # previous positions
+            # previous y position
             if track_id in previous_positions:
-
                 prev_cy = previous_positions[track_id]
 
                 # line cross detection
